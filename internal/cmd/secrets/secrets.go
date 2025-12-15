@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"syscall"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
@@ -273,7 +272,7 @@ func ensureUnlocked(vlt *vault.Vault) error {
 }
 
 func readPassword() (string, error) {
-	password, err := term.ReadPassword(int(syscall.Stdin))
+	password, err := term.ReadPassword(int(os.Stdin.Fd()))
 	if err != nil {
 		return "", err
 	}

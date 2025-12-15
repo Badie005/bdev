@@ -2,9 +2,9 @@ package workflowcmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
-	"syscall"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
@@ -135,7 +135,7 @@ func runCmd() *cobra.Command {
 				if v, ok := eng.Vault.(*vault.Vault); ok {
 					if v.Exists() {
 						fmt.Print(ui.Bold("Vault password required: "))
-						bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+						bytePassword, err := term.ReadPassword(int(os.Stdin.Fd()))
 						fmt.Println()
 						if err != nil {
 							return fmt.Errorf("failed to read password: %w", err)
