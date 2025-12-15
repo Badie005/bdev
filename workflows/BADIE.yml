@@ -1,0 +1,22 @@
+name: BADIE
+description: My workflow
+
+# Environment variables
+env:
+  NODE_ENV: development
+
+# Steps to execute
+steps:
+  - name: Install dependencies
+    run: npm install
+    
+  - name: Run tests
+    run: npm test
+    continue_on_error: false
+    
+  - name: Build
+    run: npm run build
+
+# Hooks
+on_success: echo "Workflow completed!"
+on_failure: echo "Workflow failed!"

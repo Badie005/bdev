@@ -1,0 +1,46 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2025-12-11",
+    "tasks": [
+        {
+            "id": 1,
+            "title": "Configurer Oh My Posh avec le theme B.DEV",
+            "status": "pending",
+            "priority": "high",
+            "category": "setup",
+            "createdAt": "2025-12-11"
+        },
+        {
+            "id": 2,
+            "title": "Installer Ollama pour l'IA locale",
+            "status": "pending",
+            "priority": "high",
+            "category": "ai",
+            "createdAt": "2025-12-11"
+        },
+        {
+            "id": 3,
+            "title": "Tester le CLI B.DEV",
+            "status": "pending",
+            "priority": "medium",
+            "category": "cli",
+            "createdAt": "2025-12-11"
+        },
+        {
+            "id": 4,
+            "title": "Configurer les backups automatiques",
+            "status": "pending",
+            "priority": "medium",
+            "category": "automation",
+            "createdAt": "2025-12-11"
+        },
+        {
+            "id": 5,
+            "title": "Creer le repo dotfiles",
+            "status": "pending",
+            "priority": "low",
+            "category": "setup",
+            "createdAt": "2025-12-11"
+        }
+    ]
+}

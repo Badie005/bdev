@@ -1,0 +1,46 @@
+run:
+  timeout: 5m
+  tests: false
+
+linters:
+  enable:
+    # Defaults (keep all)
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    # Essential additions
+    - bodyclose
+    - copyloopvar
+    - gofmt
+    - goimports
+    - gosec
+    - misspell
+    - noctx
+    - unconvert
+    - whitespace
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/badie/bdev
+  misspell:
+    locale: US
+  gosec:
+    excludes:
+      - G306  # Expect WriteFile permissions to be 0600
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck
+    # Cobra command handlers use func(cmd, args) signature
+    - path: internal/cmd/
+      linters:
+        - unused
+  max-issues-per-linter: 50
+  max-same-issues: 10
+

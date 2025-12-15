@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity IDE - Agent Tools & Combinations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --primary-glow: rgba(255, 107, 53, 0.15);
+            --secondary: #E8B4A0;
+            --bg-dark: #0D0D0D;
+            --bg-card: rgba(30, 30, 30, 0.6);
+            --bg-card-hover: rgba(40, 40, 40, 0.8);
+            --glass: rgba(255, 255, 255, 0.03);
+            --text-main: #F5F5F5;
+            --text-muted: #9A9A9A;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 107, 53, 0.4);
+            --success: #4ADE80;
+            --warning: #FBBF24;
+            --info: #60A5FA;
+            --purple: #A78BFA;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(ellipse at 20% 0%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(167, 139, 250, 0.05) 0%, transparent 50%);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 3rem 0 4rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #FF8F6B);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tab:hover,
+        .tab.active {
+            background: var(--primary-glow);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-glow);
+            border: 1px solid var(--border-hover);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        }
+
+        /* CARD */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* TOOL CARD */
+        .tool-name {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-badge {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .badge-core {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--success);
+        }
+
+        .badge-advanced {
+            background: rgba(167, 139, 250, 0.15);
+            color: var(--purple);
+        }
+
+        .badge-mcp {
+            background: rgba(96, 165, 250, 0.15);
+            color: var(--info);
+        }
+
+        .tool-desc {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .tool-params {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+        }
+
+        .param-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            color: var(--secondary);
+            font-size: 0.8rem;
+        }
+
+        /* MODEL CARD */
+        .model-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .model-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .model-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .model-gemini {
+            background: linear-gradient(135deg, #4285F4, #34A853);
+        }
+
+        .model-claude {
+            background: linear-gradient(135deg, #D97757, #E8B4A0);
+        }
+
+        .model-gpt {
+            background: linear-gradient(135deg, #10A37F, #1A7F64);
+        }
+
+        .model-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .model-tier {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .model-stats {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stat-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            width: 60px;
+        }
+
+        .stat-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* COMBINATION CARD */
+        .combo-card {
+            background: linear-gradient(135deg, var(--bg-card), rgba(255, 107, 53, 0.03));
+        }
+
+        .combo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .combo-icon {
+            font-size: 1.5rem;
+        }
+
+        .combo-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .combo-subtitle {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .combo-section {
+            margin-bottom: 1rem;
+        }
+
+        .combo-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .combo-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .pill {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .pill-model {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .pill-mode {
+            background: rgba(167, 139, 250, 0.15);
+            color: var(--purple);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+        }
+
+        .pill-tool {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .combo-note {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(255, 107, 53, 0.08);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        tr:hover td {
+            background: var(--glass);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .grid,
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                gap: 0.25rem;
+            }
+
+            .tab {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+            </div>
+            <h1>Antigravity IDE Agent</h1>
+            <p class="subtitle">Inventaire complet des outils, modèles et combinaisons optimales</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('combinations')">🎯 Combinaisons</div>
+            <div class="tab" onclick="showTab('tools')">🔧 Outils (30+)</div>
+            <div class="tab" onclick="showTab('models')">🤖 Modèles</div>
+            <div class="tab" onclick="showTab('modes')">⚙️ Modes</div>
+        </div>
+
+        <!-- COMBINATIONS TAB -->
+        <div id="combinations" class="tab-content active">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <div>
+                        <h2 class="section-title">Combinaisons Optimales par Tâche</h2>
+                        <p class="section-desc">Les meilleures configurations Modèle + Mode + Outils pour chaque cas
+                            d'usage</p>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <!-- Combo 1: Complex Architecture -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">🏗️</span>
+                            <div>
+                                <div class="combo-title">Architecture Complexe</div>
+                                <div class="combo-subtitle">Conception de systèmes, refactoring majeur</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Opus 4.5 (Thinking)</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Planning</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">codebase_search</span>
+                                <span class="pill pill-tool">view_file_outline</span>
+                                <span class="pill pill-tool">view_code_item</span>
+                                <span class="pill pill-tool">write_to_file</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Opus (Thinking) excelle dans la réflexion profonde pour les décisions
+                            architecturales critiques.</div>
+                    </div>
+
+                    <!-- Combo 2: Quick Fixes -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">⚡</span>
+                            <div>
+                                <div class="combo-title">Quick Fixes & Bugs</div>
+                                <div class="combo-subtitle">Corrections rapides, petits changements</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Gemini 3 Pro (Low)</span>
+                                <span class="pill pill-model">Claude Sonnet 4.5</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Fast</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">grep_search</span>
+                                <span class="pill pill-tool">replace_file_content</span>
+                                <span class="pill pill-tool">run_command</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Vitesse maximale pour les corrections simples et localisées.</div>
+                    </div>
+
+                    <!-- Combo 3: Research -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">🔬</span>
+                            <div>
+                                <div class="combo-title">Recherche & Exploration</div>
+                                <div class="combo-subtitle">Analyse de codebase, découverte de patterns</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Sonnet 4.5 (Thinking)</span>
+                                <span class="pill pill-model">Gemini 3 Pro (High)</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Planning</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">codebase_search</span>
+                                <span class="pill pill-tool">search_web</span>
+                                <span class="pill pill-tool">read_url_content</span>
+                                <span class="pill pill-tool">list_dir</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Le mode Thinking permet une analyse méthodique avant d'agir.</div>
+                    </div>
+
+                    <!-- Combo 4: UI/Frontend -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">🎨</span>
+                            <div>
+                                <div class="combo-title">UI & Frontend</div>
+                                <div class="combo-subtitle">Design, composants, pages web</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Sonnet 4.5</span>
+                                <span class="pill pill-model">Gemini 3 Pro (High)</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Fast</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">generate_image</span>
+                                <span class="pill pill-tool">browser_subagent</span>
+                                <span class="pill pill-tool">write_to_file</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Combinez génération d'images avec preview browser pour itérer
+                            rapidement.</div>
+                    </div>
+
+                    <!-- Combo 5: Documentation -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">📚</span>
+                            <div>
+                                <div class="combo-title">Documentation</div>
+                                <div class="combo-subtitle">README, guides, commentaires de code</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Sonnet 4.5</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Fast</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">view_file_outline</span>
+                                <span class="pill pill-tool">write_to_file</span>
+                                <span class="pill pill-tool">multi_replace_file_content</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Sonnet produit une documentation claire et structurée rapidement.</div>
+                    </div>
+
+                    <!-- Combo 6: Testing -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">🧪</span>
+                            <div>
+                                <div class="combo-title">Tests & Validation</div>
+                                <div class="combo-subtitle">Tests unitaires, E2E, debugging</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Sonnet 4.5 (Thinking)</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Planning</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">run_command</span>
+                                <span class="pill pill-tool">command_status</span>
+                                <span class="pill pill-tool">browser_subagent</span>
+                                <span class="pill pill-tool">grep_search</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Le thinking mode aide à identifier les edge cases et erreurs subtiles.
+                        </div>
+                    </div>
+
+                    <!-- Combo 7: Notion/External -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">🔗</span>
+                            <div>
+                                <div class="combo-title">Intégrations Externes</div>
+                                <div class="combo-subtitle">Notion, APIs, services externes</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Sonnet 4.5</span>
+                                <span class="pill pill-model">GPT-OSS 120B</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Fast</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">mcp_notion-*</span>
+                                <span class="pill pill-tool">read_url_content</span>
+                                <span class="pill pill-tool">search_web</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">20+ outils MCP Notion disponibles pour la gestion de pages et bases de
+                            données.</div>
+                    </div>
+
+                    <!-- Combo 8: DevOps -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">🚀</span>
+                            <div>
+                                <div class="combo-title">DevOps & Déploiement</div>
+                                <div class="combo-subtitle">Scripts, CI/CD, configuration</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Gemini 3 Pro (High)</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Planning</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">run_command</span>
+                                <span class="pill pill-tool">send_command_input</span>
+                                <span class="pill pill-tool">read_terminal</span>
+                                <span class="pill pill-tool">find_by_name</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Gemini excelle avec les longs contextes de configuration.</div>
+                    </div>
+
+                    <!-- Combo 9: Learning -->
+                    <div class="card combo-card">
+                        <div class="combo-header">
+                            <span class="combo-icon">📖</span>
+                            <div>
+                                <div class="combo-title">Apprentissage & Tutoriels</div>
+                                <div class="combo-subtitle">Explications, walkthroughs, mentoring</div>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Modèle recommandé</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-model">Claude Opus 4.5 (Thinking)</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Mode</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Planning</span>
+                            </div>
+                        </div>
+                        <div class="combo-section">
+                            <div class="combo-label">Outils clés</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">view_code_item</span>
+                                <span class="pill pill-tool">search_web</span>
+                                <span class="pill pill-tool">notify_user</span>
+                            </div>
+                        </div>
+                        <div class="combo-note">Opus fournit des explications détaillées et pédagogiques.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOLS TAB -->
+        <div id="tools" class="tab-content">
+            <!-- File System Tools -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">📁</div>
+                    <div>
+                        <h2 class="section-title">Système de Fichiers</h2>
+                        <p class="section-desc">Lecture, écriture et navigation dans les fichiers</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <span class="tool-name">view_file <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Lit le contenu d'un fichier (texte ou binaire). Supporte la pagination avec
+                            StartLine/EndLine.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>AbsolutePath, StartLine, EndLine</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">write_to_file <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Crée un nouveau fichier avec le contenu spécifié. Crée les dossiers parents
+                            si nécessaire.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>TargetFile, CodeContent, Overwrite</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">replace_file_content <span
+                                class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Remplace un bloc contigu de texte dans un fichier existant.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>TargetFile, TargetContent, ReplacementContent</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">multi_replace_file_content <span
+                                class="tool-badge badge-advanced">Advanced</span></span>
+                        <p class="tool-desc">Effectue plusieurs remplacements non-contigus dans un même fichier.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>TargetFile, ReplacementChunks[]</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">list_dir <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Liste le contenu d'un répertoire avec tailles et nombre d'enfants.</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>DirectoryPath</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">find_by_name <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Recherche de fichiers par nom avec patterns glob (via fd).</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>SearchDirectory, Pattern, Extensions</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">view_file_outline <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Affiche la structure d'un fichier (fonctions, classes, signatures).</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>AbsolutePath</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">view_code_item <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Affiche le contenu d'une classe ou fonction spécifique.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>File, NodePaths[]</code></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Tools -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🔍</div>
+                    <div>
+                        <h2 class="section-title">Recherche & Navigation</h2>
+                        <p class="section-desc">Recherche dans le code et la documentation</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <span class="tool-name">grep_search <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Recherche exacte de patterns dans les fichiers (ripgrep). Supporte regex.
+                        </p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>SearchPath, Query, IsRegex, Includes</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">codebase_search <span
+                                class="tool-badge badge-advanced">Advanced</span></span>
+                        <p class="tool-desc">Recherche sémantique/fuzzy dans le code. Idéal pour trouver des fonctions
+                            par description.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>Query, TargetDirectories[]</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">search_in_file <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Recherche sémantique dans un fichier spécifique.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>AbsolutePath, Query</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">search_web <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Recherche web pour informations récentes avec résumé et URLs.</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>query, domain</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">read_url_content <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Récupère le contenu d'une URL et le convertit en markdown.</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>Url</code></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Tools -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">💻</div>
+                    <div>
+                        <h2 class="section-title">Terminal & Exécution</h2>
+                        <p class="section-desc">Exécution de commandes et gestion de processus</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <span class="tool-name">run_command <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Exécute des commandes shell (PowerShell). Peut être sync ou async.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>CommandLine, Cwd, SafeToAutoRun</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">command_status <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Vérifie le statut d'une commande en arrière-plan.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>CommandId, WaitDurationSeconds</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">send_command_input <span
+                                class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Envoie une entrée stdin à un processus en cours.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>CommandId, Input, Terminate</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">read_terminal <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Lit le contenu d'un terminal par son ID de processus.</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>ProcessID, Name</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browser Tools -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🌐</div>
+                    <div>
+                        <h2 class="section-title">Browser & Automation</h2>
+                        <p class="section-desc">Automatisation du navigateur et tests visuels</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <span class="tool-name">browser_subagent <span
+                                class="tool-badge badge-advanced">Advanced</span></span>
+                        <p class="tool-desc">Lance un sous-agent browser pour interactions web (clic, saisie,
+                            navigation). Enregistre automatiquement en vidéo WebP.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>TaskName, Task, RecordingName</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">generate_image <span
+                                class="tool-badge badge-advanced">Advanced</span></span>
+                        <p class="tool-desc">Génère ou édite des images via prompt. Idéal pour UI mockups et assets.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>Prompt, ImageName, ImagePaths[]</code></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Management Tools -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">📋</div>
+                    <div>
+                        <h2 class="section-title">Gestion de Tâches</h2>
+                        <p class="section-desc">Organisation et communication du travail</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <span class="tool-name">task_boundary <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Indique le début/progression d'une tâche. Gère les modes PLANNING,
+                            EXECUTION, VERIFICATION.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>TaskName, Mode, TaskSummary, TaskStatus</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">notify_user <span class="tool-badge badge-core">Core</span></span>
+                        <p class="tool-desc">Communique avec l'utilisateur pendant une tâche. Permet la revue
+                            d'artifacts.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>Message, PathsToReview, BlockedOnUser</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MCP/Notion Tools -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🔗</div>
+                    <div>
+                        <h2 class="section-title">MCP - Notion Integration</h2>
+                        <p class="section-desc">20+ outils pour interagir avec Notion</p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_post-search <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Recherche par titre dans Notion (pages et databases).</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>query, filter</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_post-page <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Crée une nouvelle page Notion.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>parent, properties, children</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_patch-page <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Met à jour les propriétés d'une page.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>page_id, properties</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_retrieve-a-database <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Récupère la structure d'une database Notion.</p>
+                        <div class="tool-params"><span class="param-label">Paramètres</span><code>database_id</code>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_post-database-query <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Requête une database avec filtres et tris.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>database_id, filter, sorts</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_create-a-database <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Crée une nouvelle database Notion.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>parent, title, properties</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_patch-block-children <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Ajoute du contenu (paragraphes, listes) à une page.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>block_id, children[]</code></div>
+                    </div>
+                    <div class="card">
+                        <span class="tool-name">mcp_notion_get-block-children <span
+                                class="tool-badge badge-mcp">MCP</span></span>
+                        <p class="tool-desc">Récupère les blocs enfants d'une page.</p>
+                        <div class="tool-params"><span
+                                class="param-label">Paramètres</span><code>block_id, page_size</code></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODELS TAB -->
+        <div id="models" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🤖</div>
+                    <div>
+                        <h2 class="section-title">Modèles Disponibles</h2>
+                        <p class="section-desc">Comparaison des capacités de chaque modèle</p>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card model-card">
+                        <div class="model-header">
+                            <div class="model-icon model-claude">C</div>
+                            <div>
+                                <div class="model-name">Claude Opus 4.5 (Thinking)</div>
+                                <div class="model-tier">Tier: Maximum Intelligence</div>
+                            </div>
+                        </div>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-label">Intelligence</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Vitesse</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Raisonnement</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="tool-desc" style="margin-top: 1rem;">Idéal pour: Architecture complexe, décisions
+                            critiques, tutoriels approfondis, recherche exhaustive.</p>
+                    </div>
+
+                    <div class="card model-card">
+                        <div class="model-header">
+                            <div class="model-icon model-claude">C</div>
+                            <div>
+                                <div class="model-name">Claude Sonnet 4.5 (Thinking)</div>
+                                <div class="model-tier">Tier: Deep Reasoning</div>
+                            </div>
+                        </div>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-label">Intelligence</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Vitesse</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Raisonnement</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="tool-desc" style="margin-top: 1rem;">Idéal pour: Exploration de codebase,
+                            tests/debugging, algorithmes, analyse de patterns.</p>
+                    </div>
+
+                    <div class="card model-card">
+                        <div class="model-header">
+                            <div class="model-icon model-claude">C</div>
+                            <div>
+                                <div class="model-name">Claude Sonnet 4.5</div>
+                                <div class="model-tier">Tier: Balanced</div>
+                            </div>
+                        </div>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-label">Intelligence</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Vitesse</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Raisonnement</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="tool-desc" style="margin-top: 1rem;">Idéal pour: Coding général, documentation,
+                            UI/Frontend, intégrations, tâches quotidiennes.</p>
+                    </div>
+
+                    <div class="card model-card">
+                        <div class="model-header">
+                            <div class="model-icon model-gemini">G</div>
+                            <div>
+                                <div class="model-name">Gemini 3 Pro (High)</div>
+                                <div class="model-tier">Tier: High Capacity</div>
+                            </div>
+                        </div>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-label">Intelligence</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Vitesse</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Contexte</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="tool-desc" style="margin-top: 1rem;">Idéal pour: Longs contextes, DevOps,
+                            configurations complexes, multimodal (images).</p>
+                    </div>
+
+                    <div class="card model-card">
+                        <div class="model-header">
+                            <div class="model-icon model-gemini">G</div>
+                            <div>
+                                <div class="model-name">Gemini 3 Pro (Low)</div>
+                                <div class="model-tier">Tier: Fast</div>
+                            </div>
+                        </div>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-label">Intelligence</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Vitesse</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Contexte</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="tool-desc" style="margin-top: 1rem;">Idéal pour: Quick fixes, tâches simples,
+                            itérations rapides, prototypage.</p>
+                    </div>
+
+                    <div class="card model-card">
+                        <div class="model-header">
+                            <div class="model-icon model-gpt">O</div>
+                            <div>
+                                <div class="model-name">GPT-OSS 120B (Medium)</div>
+                                <div class="model-tier">Tier: Open Source</div>
+                            </div>
+                        </div>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-label">Intelligence</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Vitesse</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Privacy</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="tool-desc" style="margin-top: 1rem;">Idéal pour: Tâches sensibles, alternative
+                            open-source, diversification de providers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODES TAB -->
+        <div id="modes" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">⚙️</div>
+                    <div>
+                        <h2 class="section-title">Modes de Conversation</h2>
+                        <p class="section-desc">Choisir le bon mode selon la complexité de la tâche</p>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid var(--purple);">
+                        <h3 style="color: var(--purple); margin-bottom: 1rem; font-size: 1.3rem;">📐 Mode Planning</h3>
+                        <p class="tool-desc" style="margin-bottom: 1.5rem;">L'agent planifie avant d'exécuter. Utilisé
+                            pour la recherche approfondie, les tâches complexes et le travail collaboratif.</p>
+
+                        <div style="margin-bottom: 1rem;">
+                            <div class="combo-label">Comportement</div>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; padding-left: 1.5rem;">
+                                <li>Crée des artifacts (implementation_plan.md, task.md)</li>
+                                <li>Demande validation avant d'agir</li>
+                                <li>Utilise les 3 phases: PLANNING → EXECUTION → VERIFICATION</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <div class="combo-label">Cas d'usage</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-mode">Architecture</span>
+                                <span class="pill pill-mode">Refactoring majeur</span>
+                                <span class="pill pill-mode">Nouveaux projets</span>
+                                <span class="pill pill-mode">Debugging complexe</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid var(--success);">
+                        <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.3rem;">⚡ Mode Fast</h3>
+                        <p class="tool-desc" style="margin-bottom: 1.5rem;">L'agent exécute directement les tâches. Pour
+                            les tâches simples qui peuvent être complétées rapidement.</p>
+
+                        <div style="margin-bottom: 1rem;">
+                            <div class="combo-label">Comportement</div>
+                            <ul style="color: var(--text-muted); font-size: 0.9rem; padding-left: 1.5rem;">
+                                <li>Exécution immédiate sans planification</li>
+                                <li>Moins d'artifacts créés</li>
+                                <li>Réponses plus courtes et directes</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <div class="combo-label">Cas d'usage</div>
+                            <div class="combo-pills">
+                                <span class="pill pill-tool">Quick fixes</span>
+                                <span class="pill pill-tool">Petits changements</span>
+                                <span class="pill pill-tool">Questions simples</span>
+                                <span class="pill pill-tool">Documentation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-wrapper" style="margin-top: 2rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Critère</th>
+                                <th>Planning</th>
+                                <th>Fast</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps de réponse initial</td>
+                                <td>Plus long (réflexion)</td>
+                                <td>Rapide</td>
+                            </tr>
+                            <tr>
+                                <td>Qualité pour tâches complexes</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                                <td>⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td>Efficacité tâches simples</td>
+                                <td>⭐⭐⭐</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td>Création d'artifacts</td>
+                                <td>Systématique</td>
+                                <td>Au besoin</td>
+                            </tr>
+                            <tr>
+                                <td>Validation utilisateur</td>
+                                <td>Fréquente</td>
+                                <td>Rare</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
