@@ -9,7 +9,6 @@ project_name: bdev
 before:
   hooks:
     - go mod tidy
-    - go generate ./...
 
 builds:
   - id: bdev
