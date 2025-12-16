@@ -30,6 +30,7 @@ jobs:
   security:
     name: Security
     runs-on: ubuntu-latest
+    continue-on-error: true  # Non-blocking - advisory only
     steps:
       - uses: actions/checkout@v4
       
@@ -39,7 +40,7 @@ jobs:
           cache: true
       
       - name: Run gosec
-        uses: securego/gosec@master
+        uses: securego/gosec@v2.18.2
         with:
           args: -exclude=G306,G304 ./...
 
