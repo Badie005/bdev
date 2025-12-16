@@ -1,0 +1,111 @@
+# GoReleaser config for B.DEV CLI
+# Run: goreleaser release --snapshot --clean
+# Docs: https://goreleaser.com
+
+version: 2
+
+project_name: bdev
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: bdev
+    main: ./cmd/bdev
+    binary: bdev
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X github.com/badie/bdev/internal/cmd/version.Version={{.Version}}
+      - -X github.com/badie/bdev/internal/cmd/version.Commit={{.Commit}}
+      - -X github.com/badie/bdev/internal/cmd/version.Date={{.Date}}
+
+archives:
+  - id: default
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE*
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^style:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+  groups:
+    - title: '🚀 Features'
+      regexp: '^feat.*'
+      order: 0
+    - title: '🐛 Bug Fixes'
+      regexp: '^fix.*'
+      order: 1
+    - title: '📦 Refactoring'
+      regexp: '^refactor.*'
+      order: 2
+    - title: '📚 Documentation'
+      regexp: '^docs.*'
+      order: 3
+    - title: 'Other'
+      order: 999
+
+release:
+  github:
+    owner: Badie005
+    name: bdev
+  draft: false
+  prerelease: auto
+  mode: replace
+  name_template: "v{{.Version}}"
+
+brews:
+  - name: bdev
+    repository:
+      owner: Badie005
+      name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/Badie005/bdev
+    description: "B.DEV CLI - Enterprise Developer Workstation"
+    license: MIT
+    skip_upload: true  # Enable when homebrew-tap repo is ready
+
+nfpms:
+  - id: packages
+    package_name: bdev
+    vendor: B.DEV
+    homepage: https://github.com/Badie005/bdev
+    maintainer: Badie <badie@example.com>
+    description: "B.DEV CLI - Enterprise Developer Workstation"
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin

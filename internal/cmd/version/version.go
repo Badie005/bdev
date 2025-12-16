@@ -9,11 +9,12 @@ import (
 	"github.com/badie/bdev/pkg/ui"
 )
 
-// Version is set at build time via ldflags
-var Version = "3.0.0"
-
-// BuildTime is set at build time via ldflags
-var BuildTime = "development"
+// Version info - set at build time via ldflags
+var (
+	Version = "dev"
+	Commit  = "none"
+	Date    = "unknown"
+)
 
 // NewCommand returns the version cobra command
 func NewCommand() *cobra.Command {
@@ -24,9 +25,10 @@ func NewCommand() *cobra.Command {
 			fmt.Println(ui.Primary("B.DEV CLI"))
 			fmt.Println(ui.Muted(ui.SeparatorLight))
 			fmt.Printf("  %s %s\n", ui.Bold("Version:"), Version)
+			fmt.Printf("  %s %s\n", ui.Bold("Commit:"), Commit)
 			fmt.Printf("  %s %s\n", ui.Bold("Go:"), runtime.Version())
 			fmt.Printf("  %s %s/%s\n", ui.Bold("Platform:"), runtime.GOOS, runtime.GOARCH)
-			fmt.Printf("  %s %s\n", ui.Bold("Built:"), BuildTime)
+			fmt.Printf("  %s %s\n", ui.Bold("Built:"), Date)
 			fmt.Println(ui.Muted(ui.SeparatorLight))
 		},
 	}

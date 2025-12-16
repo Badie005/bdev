@@ -2,10 +2,11 @@
 
 > **One CLI to rule them all** - Unified command-line interface for all development tasks
 
-[![Version](https://img.shields.io/badge/version-3.0.0-FF6B35)](https://github.com/badie/bdev) 
+[![Version](https://img.shields.io/github/v/release/Badie005/bdev?color=FF6B35)](https://github.com/Badie005/bdev/releases)
 [![Go](https://img.shields.io/badge/go-1.21+-00ADD8)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![CI](https://github.com/badie/bdev/actions/workflows/ci.yml/badge.svg)](https://github.com/badie/bdev/actions/workflows/ci.yml)
+[![CI](https://github.com/Badie005/bdev/actions/workflows/ci.yml/badge.svg)](https://github.com/Badie005/bdev/actions/workflows/ci.yml)
+[![Release](https://github.com/Badie005/bdev/actions/workflows/release.yml/badge.svg)](https://github.com/Badie005/bdev/actions/workflows/release.yml)
 
 ---
 
