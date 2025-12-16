@@ -5,7 +5,6 @@ go 1.24.0
 require (
 	github.com/chzyer/readline v1.5.1
 	github.com/fatih/color v1.16.0
-	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.18.2
