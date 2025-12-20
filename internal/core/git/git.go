@@ -354,8 +354,14 @@ func ParseStatus(output string) *Status {
 			ab := strings.TrimPrefix(line, "# branch.ab ")
 			parts := strings.Fields(ab)
 			if len(parts) >= 2 {
-				status.Ahead, _ = strconv.Atoi(strings.TrimPrefix(parts[0], "+"))
-				status.Behind, _ = strconv.Atoi(strings.TrimPrefix(parts[1], "-"))
+				ahead, err := strconv.Atoi(strings.TrimPrefix(parts[0], "+"))
+				if err == nil {
+					status.Ahead = ahead
+				}
+				behind, err := strconv.Atoi(strings.TrimPrefix(parts[1], "-"))
+				if err == nil {
+					status.Behind = behind
+				}
 			}
 			continue
 		}
