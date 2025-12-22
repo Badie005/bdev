@@ -288,7 +288,7 @@ func runAgentOnFile(agent Agent, filePath string) error {
 	c := getClient()
 
 	if !c.IsAvailable() {
-		return fmt.Errorf("Ollama is not running. Start it with: ollama serve")
+		return fmt.Errorf("ollama is not running. Start it with: ollama serve")
 	}
 
 	// Read file

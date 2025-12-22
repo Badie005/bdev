@@ -100,7 +100,7 @@ func chatCmd() *cobra.Command {
 			m := getMemory()
 
 			if !c.IsAvailable() {
-				return fmt.Errorf("Ollama is not running. Start it with: ollama serve")
+				return fmt.Errorf("ollama is not running. Start it with: ollama serve")
 			}
 
 			prompt := strings.Join(args, " ")
@@ -197,7 +197,7 @@ func modelsCmd() *cobra.Command {
 			c := getClient()
 
 			if !c.IsAvailable() {
-				return fmt.Errorf("Ollama is not running")
+				return fmt.Errorf("ollama is not running")
 			}
 
 			models, err := c.ListModels()

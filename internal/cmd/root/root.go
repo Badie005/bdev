@@ -133,12 +133,20 @@ func printCommandGroup(parent *cobra.Command, names []string) {
 }
 
 func registerShortcuts() {
-	// bdev list - shortcut for projects list
+	registerListShortcut()
+	registerStartShortcut()
+	registerTestShortcut()
+	registerBuildShortcut()
+	registerInstallShortcut()
+	registerLintShortcut()
+	registerDemoShortcut()
+}
+
+func registerListShortcut() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "list",
 		Short: "List all projects (shortcut for 'projects list')",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Delegate to projects list
 			projectsCmd, _, _ := rootCmd.Find([]string{"projects", "list"})
 			if projectsCmd != nil {
 				return projectsCmd.RunE(projectsCmd, args)
@@ -146,8 +154,9 @@ func registerShortcuts() {
 			return nil
 		},
 	})
+}
 
-	// bdev start - start dev server in current project
+func registerStartShortcut() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "start",
 		Short: "Start development server (current project)",
@@ -159,8 +168,9 @@ func registerShortcuts() {
 			return r.Start()
 		},
 	})
+}
 
-	// bdev test - run tests in current project
+func registerTestShortcut() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "test",
 		Short: "Run tests (current project)",
@@ -172,8 +182,9 @@ func registerShortcuts() {
 			return r.Test(false)
 		},
 	})
+}
 
-	// bdev build - build current project
+func registerBuildShortcut() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "build",
 		Short: "Build for production (current project)",
@@ -185,8 +196,9 @@ func registerShortcuts() {
 			return r.Build()
 		},
 	})
+}
 
-	// bdev install - install dependencies
+func registerInstallShortcut() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "install",
 		Short: "Install dependencies (current project)",
@@ -198,8 +210,9 @@ func registerShortcuts() {
 			return r.Install()
 		},
 	})
+}
 
-	// bdev lint - run linter
+func registerLintShortcut() {
 	var fix bool
 	lintCmd := &cobra.Command{
 		Use:   "lint",
@@ -214,8 +227,9 @@ func registerShortcuts() {
 	}
 	lintCmd.Flags().BoolVar(&fix, "fix", false, "Auto-fix issues")
 	rootCmd.AddCommand(lintCmd)
+}
 
-	// bdev demo - show visual components
+func registerDemoShortcut() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:     "demo",
 		Aliases: []string{"ui"},
