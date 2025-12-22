@@ -32,7 +32,7 @@ type Theme struct {
 	Info    func(a ...interface{}) string
 }
 
-// Global Theme Instance
+// CurrentTheme is the global Theme Instance
 var CurrentTheme = AnthropicTheme()
 
 // AnthropicTheme returns the Anthropic Rust/Warm palette
@@ -65,20 +65,38 @@ func AnthropicTheme() *Theme {
 // LEGACY PROXIES (Backward Compatibility)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-func Primary(a ...interface{}) string   { return CurrentTheme.Rust(a...) }
+// Primary returns the primary accent color
+func Primary(a ...interface{}) string { return CurrentTheme.Rust(a...) }
+
+// Secondary returns the secondary accent color
 func Secondary(a ...interface{}) string { return CurrentTheme.Slate(a...) }
-func Success(a ...interface{}) string   { return CurrentTheme.Success(a...) }
-func Warning(a ...interface{}) string   { return CurrentTheme.Warning(a...) }
-func Error(a ...interface{}) string     { return CurrentTheme.Error(a...) }
-func Muted(a ...interface{}) string     { return CurrentTheme.Slate(a...) }
-func Info(a ...interface{}) string      { return CurrentTheme.Info(a...) }
-func Cyan(a ...interface{}) string      { return CurrentTheme.Rust(a...) }
-func Bold(a ...interface{}) string      { return CurrentTheme.Snow(a...) }
+
+// Success returns the success color
+func Success(a ...interface{}) string { return CurrentTheme.Success(a...) }
+
+// Warning returns the warning color
+func Warning(a ...interface{}) string { return CurrentTheme.Warning(a...) }
+
+// Error returns the error color
+func Error(a ...interface{}) string { return CurrentTheme.Error(a...) }
+
+// Muted returns the muted color
+func Muted(a ...interface{}) string { return CurrentTheme.Slate(a...) }
+
+// Info returns the info color
+func Info(a ...interface{}) string { return CurrentTheme.Info(a...) }
+
+// Cyan returns the cyan color
+func Cyan(a ...interface{}) string { return CurrentTheme.Rust(a...) }
+
+// Bold returns the bold color
+func Bold(a ...interface{}) string { return CurrentTheme.Snow(a...) }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // GLYPH REGISTRY (User Spec v2.0)
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// Glyphs defines the contract for visual glyphs
 type Glyphs struct {
 	// Spinners (80ms interval)
 	SpinnerDefault []string

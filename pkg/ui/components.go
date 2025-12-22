@@ -15,12 +15,14 @@ import (
 // │ 1. PROGRESS BAR (9 Phases per User Spec)                                    │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// ProgressFrame defines a single frame of a progress bar animation
 type ProgressFrame struct {
 	Bar         string
 	Percentage  int
 	Description string
 }
 
+// ProgressBuild defines the standard build progress animation frames
 var ProgressBuild = []ProgressFrame{
 	{Bar: "[░░░░░░░░░░░░░░░░░░░░]", Percentage: 0, Description: "Initializing"},
 	{Bar: "[██░░░░░░░░░░░░░░░░░░]", Percentage: 12, Description: "Parsing modules"},
@@ -37,11 +39,15 @@ var ProgressBuild = []ProgressFrame{
 // │ 2. STATUS INDICATORS (Spinners per User Spec)                               │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// StatusFrames defines a sequence of strings for status animation
 type StatusFrames []string
 
 var (
+	// StatusLoading is the default spinner animation
 	StatusLoading    = StatusFrames(ActiveGlyphs.SpinnerDefault)
+	// StatusProcessing is the build spinner animation
 	StatusProcessing = StatusFrames(ActiveGlyphs.SpinnerBuild)
+	// StatusNetwork is the network spinner animation
 	StatusNetwork    = StatusFrames(ActiveGlyphs.SpinnerNetwork)
 )
 
@@ -50,8 +56,11 @@ var (
 // └─────────────────────────────────────────────────────────────────────────────┘
 
 const (
+	// SeparatorLight is a light separator line
 	SeparatorLight  = `─────────────────────────────────────────────────────────────`
+	// SeparatorMedium is a medium (double) separator line
 	SeparatorMedium = `═════════════════════════════════════════════════════════════`
+	// SeparatorDotted is a dotted separator line
 	SeparatorDotted = `·························································`
 )
 
@@ -59,14 +68,19 @@ const (
 // │ 4. BOX COMPONENT (User Spec - 3 Styles)                                     │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// BoxStyle defines the visual style of a box component
 type BoxStyle string
 
 const (
+	// BoxStyleLight uses light box drawing characters
 	BoxStyleLight   BoxStyle = "light"
+	// BoxStyleRounded uses rounded corner box drawing characters
 	BoxStyleRounded BoxStyle = "rounded"
+	// BoxStyleDouble uses double line box drawing characters
 	BoxStyleDouble  BoxStyle = "double"
 )
 
+// Box represents a boxed content area
 type Box struct {
 	Width   int
 	Title   string
@@ -74,6 +88,7 @@ type Box struct {
 	Style   BoxStyle
 }
 
+// Render returns the string representation of the box
 func (b *Box) Render() string {
 	var tl, tr, bl, br, h, v string
 
@@ -122,7 +137,9 @@ func (b *Box) Render() string {
 // └─────────────────────────────────────────────────────────────────────────────┘
 
 var (
+	// PromptSpine is the vertical line used in prompts
 	PromptSpine   = "┃"
+	// PromptPointer is the arrow used in prompts
 	PromptPointer = ActiveGlyphs.Pointer
 )
 
@@ -130,18 +147,22 @@ var (
 // │ 6. STATUS MESSAGES (User Spec)                                              │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// MessageSuccess formats a success message with an icon
 func MessageSuccess(msg string) string {
 	return fmt.Sprintf("%s  %s", Success(ActiveGlyphs.Check), msg)
 }
 
+// MessageError formats an error message with an icon
 func MessageError(msg string) string {
 	return fmt.Sprintf("%s  %s", Error(ActiveGlyphs.Cross), msg)
 }
 
+// MessageWarning formats a warning message with an icon
 func MessageWarning(msg string) string {
 	return fmt.Sprintf("%s  %s", Warning(ActiveGlyphs.Warning), msg)
 }
 
+// MessageInfo formats an info message with an icon
 func MessageInfo(msg string) string {
 	return fmt.Sprintf("%s  %s", Info(ActiveGlyphs.Info), msg)
 }
@@ -150,6 +171,7 @@ func MessageInfo(msg string) string {
 // │ 7. WELCOME HEADER (User Spec - Double Box)                                  │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// PrintWelcome prints the standard welcome banner
 func PrintWelcome() {
 	width := 58
 
@@ -184,6 +206,7 @@ func PrintWelcome() {
 	fmt.Println()
 }
 
+// PrintWelcomeWithVersion prints the welcome banner (version arguments are deprecated/unused in current implementation)
 func PrintWelcomeWithVersion(version, goVersion string) {
 	PrintWelcome()
 }
@@ -192,12 +215,14 @@ func PrintWelcomeWithVersion(version, goVersion string) {
 // │ 8. UTILITY FUNCTIONS                                                        │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// PrintHeader prints a section header with a separator
 func PrintHeader(header string) {
 	fmt.Println()
 	fmt.Println(Bold(header))
 	fmt.Println(Muted(SeparatorMedium))
 }
 
+// PrintProgressBar prints a single frame of the progress bar
 func PrintProgressBar(frame ProgressFrame) {
 	fmt.Printf("\r%s %3d%%  %s",
 		Primary(frame.Bar),
@@ -205,6 +230,7 @@ func PrintProgressBar(frame ProgressFrame) {
 		Muted(frame.Description))
 }
 
+// AnimateProgress runs the progress bar animation
 func AnimateProgress(frames []ProgressFrame, delayMs int) {
 	for _, frame := range frames {
 		PrintProgressBar(frame)
@@ -213,6 +239,7 @@ func AnimateProgress(frames []ProgressFrame, delayMs int) {
 	fmt.Println()
 }
 
+// AnimateStatus runs a status spinner animation for a fixed duration
 func AnimateStatus(frames StatusFrames, description string, duration time.Duration) {
 	start := time.Now()
 	frameIndex := 0
@@ -227,6 +254,7 @@ func AnimateStatus(frames StatusFrames, description string, duration time.Durati
 	fmt.Println()
 }
 
+// ClearLine clears the current terminal line
 func ClearLine() {
 	fmt.Print("\r\033[K")
 }
@@ -235,6 +263,7 @@ func ClearLine() {
 // │ 9. SPINNER COMPONENT (User Spec - 80ms)                                     │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// Spinner represents a loading spinner
 type Spinner struct {
 	Frames      StatusFrames
 	Description string
@@ -243,6 +272,7 @@ type Spinner struct {
 	active      bool
 }
 
+// NewSpinner creates a new default spinner
 func NewSpinner(description string) *Spinner {
 	return &Spinner{
 		Frames:      StatusLoading,
@@ -252,6 +282,7 @@ func NewSpinner(description string) *Spinner {
 	}
 }
 
+// NewSpinnerWithStyle creates a new spinner with a specific style (build, network, or default)
 func NewSpinnerWithStyle(description, style string) *Spinner {
 	var frames StatusFrames
 	switch style {
@@ -270,6 +301,7 @@ func NewSpinnerWithStyle(description, style string) *Spinner {
 	}
 }
 
+// Start begins the spinner animation in a goroutine
 func (s *Spinner) Start() {
 	if s.active {
 		return
@@ -292,6 +324,7 @@ func (s *Spinner) Start() {
 	}()
 }
 
+// Stop halts the spinner animation
 func (s *Spinner) Stop() {
 	if !s.active {
 		return
@@ -301,11 +334,13 @@ func (s *Spinner) Stop() {
 	ClearLine()
 }
 
+// Success stops the spinner and prints a success message
 func (s *Spinner) Success(msg string) {
 	s.Stop()
 	fmt.Println(MessageSuccess(msg))
 }
 
+// Error stops the spinner and prints an error message
 func (s *Spinner) Error(msg string) {
 	s.Stop()
 	fmt.Println(MessageError(msg))
@@ -315,6 +350,7 @@ func (s *Spinner) Error(msg string) {
 // │ 10. BOOT SEQUENCE (User Spec - 600ms)                                       │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// AnimateBoot runs the system boot animation
 func AnimateBoot() {
 	AnimateStatus(StatusProcessing, "Initializing system core...", 600*time.Millisecond)
 	ClearLine()
@@ -326,6 +362,7 @@ func AnimateBoot() {
 // │ 11. DEMO (Full Component Showcase)                                          │
 // └─────────────────────────────────────────────────────────────────────────────┘
 
+// Demo runs a demonstration of all UI components
 func Demo() {
 	PrintHeader("OMEGA DESIGN SYSTEM v2.0 :: DEMO")
 
