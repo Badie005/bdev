@@ -62,7 +62,8 @@ type Engine struct {
 	OnStep func(step Step, result *StepResult)
 }
 
-// New creates a new workflow engine
+// New creates a new workflow engine with the specified workflow directory.
+// It initializes the engine with an empty environment map.
 func New(workflowDir string) *Engine {
 	return &Engine{
 		WorkflowDir: workflowDir,
@@ -225,28 +226,32 @@ func (e *Engine) expandEnv(s string, env map[string]string) string {
 	result := s
 
 	// 1. Context variables ${{ env.VAR }} or ${{ secrets.KEY }}
-	// Simple replacement for now, regex ideal but simple substitution works for MVP
+	// Using manual parsing to avoid regex overhead in loops
 
 	// Helper to replace secrets
 	if strings.Contains(result, "secrets.") && e.Vault != nil && e.Vault.IsUnlocked() {
-		// This is a naive implementation. For robustness, regex should be used to find all ${{ secrets.KEY }}
-		// But let's try to find keys that are likely requested.
-		// Actually, we can't iterate secrets if we don't know keys.
 		// Valid Workflow syntax: ${{ secrets.MY_KEY }}
-		// We can scan the string for this pattern.
+		var sb strings.Builder
+		sb.Grow(len(result))
 
-		start := 0
+		lastIdx := 0
 		for {
-			idx := strings.Index(result[start:], "${{ secrets.")
+			idx := strings.Index(result[lastIdx:], "${{ secrets.")
 			if idx == -1 {
+				sb.WriteString(result[lastIdx:])
 				break
 			}
-			idx += start
+			idx += lastIdx
+
 			end := strings.Index(result[idx:], " }}")
 			if end == -1 {
+				sb.WriteString(result[lastIdx:])
 				break
 			}
 			end += idx
+
+			// Write everything before the secret
+			sb.WriteString(result[lastIdx:idx])
 
 			// Extract key: ${{ secrets.KEY }} -> KEY
 			keyRaw := result[idx+len("${{ secrets.") : end]
@@ -254,29 +259,45 @@ func (e *Engine) expandEnv(s string, env map[string]string) string {
 
 			secretVal, err := e.Vault.Get(key)
 			if err == nil {
-				// Replace substring
-				result = result[:idx] + secretVal + result[end+3:]
-				// Adjust start to avoid infinite loop if replacement contains pattern (unlikely for secrets)
-				// But we should restart search or move past? moving past is safer.
-				start = idx + len(secretVal)
+				sb.WriteString(secretVal)
 			} else {
-				// Warn? For now keep placeholder or empty?
-				// Common behavior matches empty string if missing?
-				// Let's leave it to show error or just skip.
-				start = end + 3
+				// Keep original if secret not found, or maybe empty string?
+				// For safety, let's keep it empty to avoid leaking variable names if that matters,
+				// but usually we want to know what failed. Let's write empty.
+			}
+
+			lastIdx = end + 3
+		}
+		result = sb.String()
+	}
+
+	// 2. Standard Env vars
+	// Use os.Expand for standard $VAR and ${VAR}
+	// For ${{ env.VAR }} and ${{ VAR }}, we do custom replacement
+	// Optimizing: only iterate env if strict patterns exist
+	if strings.Contains(result, "${{") {
+		for k, v := range env {
+			// These replacements can be expensive if env is large.
+			// Ideally we should parse the string once and lookup vars.
+			// But for now, let's just use the string builder approach if we were to optimize fully.
+			// Given time constraints, the loop is acceptable unless env is huge.
+			// Let's stick to ReplaceAll for now but minimize it.
+			if strings.Contains(result, k) {
+				result = strings.ReplaceAll(result, "${{ "+k+" }}", v)
+				result = strings.ReplaceAll(result, "${{ env."+k+" }}", v)
 			}
 		}
 	}
 
-	// 2. Standard Env vars
-	for k, v := range env {
-		result = strings.ReplaceAll(result, "$"+k, v)
-		result = strings.ReplaceAll(result, "${"+k+"}", v)
-		result = strings.ReplaceAll(result, "${{ "+k+" }}", v)
-		result = strings.ReplaceAll(result, "${{ env."+k+" }}", v)
-	}
+	// Use os.ExpandEnv which handles $VAR and ${VAR} efficiently using a mapping function
+	result = os.Expand(result, func(key string) string {
+		if v, ok := env[key]; ok {
+			return v
+		}
+		return os.Getenv(key)
+	})
 
-	return os.ExpandEnv(result)
+	return result
 }
 
 // isWindows checks if running on Windows
@@ -292,12 +313,12 @@ func (e *Engine) Save(wf *Workflow) error {
 	}
 
 	// Ensure directory exists
-	if err := os.MkdirAll(e.WorkflowDir, 0755); err != nil {
+	if err := os.MkdirAll(e.WorkflowDir, 0o755); err != nil {
 		return err
 	}
 
 	path := filepath.Join(e.WorkflowDir, wf.Name+".yaml")
-	return os.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0o600)
 }
 
 // Delete removes a workflow
