@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"sync"
+
 	"github.com/fatih/color"
 )
 
@@ -32,8 +34,24 @@ type Theme struct {
 	Info    func(a ...interface{}) string
 }
 
-// Global Theme Instance
-var CurrentTheme = AnthropicTheme()
+var (
+	currentTheme = AnthropicTheme()
+	themeMu      sync.RWMutex
+)
+
+// CurrentTheme returns the current theme
+func CurrentTheme() *Theme {
+	themeMu.RLock()
+	defer themeMu.RUnlock()
+	return currentTheme
+}
+
+// SetTheme sets the current theme
+func SetTheme(t *Theme) {
+	themeMu.Lock()
+	defer themeMu.Unlock()
+	currentTheme = t
+}
 
 // AnthropicTheme returns the Anthropic Rust/Warm palette
 // Rust #E07B39 approximated to HiYellow (closest ANSI match for orange)
@@ -65,15 +83,15 @@ func AnthropicTheme() *Theme {
 // LEGACY PROXIES (Backward Compatibility)
 // ═══════════════════════════════════════════════════════════════════════════════
 
-func Primary(a ...interface{}) string   { return CurrentTheme.Rust(a...) }
-func Secondary(a ...interface{}) string { return CurrentTheme.Slate(a...) }
-func Success(a ...interface{}) string   { return CurrentTheme.Success(a...) }
-func Warning(a ...interface{}) string   { return CurrentTheme.Warning(a...) }
-func Error(a ...interface{}) string     { return CurrentTheme.Error(a...) }
-func Muted(a ...interface{}) string     { return CurrentTheme.Slate(a...) }
-func Info(a ...interface{}) string      { return CurrentTheme.Info(a...) }
-func Cyan(a ...interface{}) string      { return CurrentTheme.Rust(a...) }
-func Bold(a ...interface{}) string      { return CurrentTheme.Snow(a...) }
+func Primary(a ...interface{}) string   { return CurrentTheme().Rust(a...) }
+func Secondary(a ...interface{}) string { return CurrentTheme().Slate(a...) }
+func Success(a ...interface{}) string   { return CurrentTheme().Success(a...) }
+func Warning(a ...interface{}) string   { return CurrentTheme().Warning(a...) }
+func Error(a ...interface{}) string     { return CurrentTheme().Error(a...) }
+func Muted(a ...interface{}) string     { return CurrentTheme().Slate(a...) }
+func Info(a ...interface{}) string      { return CurrentTheme().Info(a...) }
+func Cyan(a ...interface{}) string      { return CurrentTheme().Rust(a...) }
+func Bold(a ...interface{}) string      { return CurrentTheme().Snow(a...) }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // GLYPH REGISTRY (User Spec v2.0)

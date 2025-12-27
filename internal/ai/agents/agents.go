@@ -137,7 +137,9 @@ var AllAgents = []Agent{
 	ArchitectAgent,
 }
 
-// GetAgent returns an agent by name
+// GetAgent returns an agent by name.
+// It performs a case-insensitive search through all registered agents.
+// Returns nil if no agent matches the given name.
 func GetAgent(name string) Agent {
 	name = strings.ToLower(name)
 	for _, a := range AllAgents {
